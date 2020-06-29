@@ -62,7 +62,7 @@ public class ScrambleEvent implements BaseEvent {
     }
 
     private String shuffle(String value) {
-        List<Character> chars = new ArrayList<Character>(word.length());
+        List<Character> chars = new ArrayList<>(word.length());
         for (char c : word.toCharArray()) {
             chars.add(c);
         }
