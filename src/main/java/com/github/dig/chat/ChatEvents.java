@@ -12,8 +12,6 @@ import org.bukkit.scheduler.BukkitScheduler;
 import java.io.*;
 import java.util.logging.Level;
 
-import static com.sun.org.apache.xalan.internal.utils.SecuritySupport.getResourceAsStream;
-
 @Log
 public class ChatEvents extends JavaPlugin {
 
@@ -55,7 +53,7 @@ public class ChatEvents extends JavaPlugin {
                     getDataFolder().mkdirs();
                     file.createNewFile();
 
-                    try (InputStream is = getResourceAsStream(fileName);
+                    try (InputStream is = getClassLoader().getResourceAsStream(fileName);
                          OutputStream os = new FileOutputStream(file)) {
                         ByteStreams.copy(is, os);
                         log.log(Level.INFO, "Saved " + file.getName());
