@@ -49,7 +49,7 @@ public class ScrambleEvent implements BaseEvent {
             List<String> words = Files.readAllLines(wordList.toPath());
             word = words.get(RANDOM.nextInt(words.size()));
 
-            String shuffledWord = shuffle(word);
+            String shuffledWord = shuffle();
             String announce = ChatColor.translateAlternateColorCodes('&', String.format(msgConfig.getString("announce", ""), shuffledWord));
             Bukkit.broadcastMessage(announce);
         } catch (IOException e) {
@@ -61,7 +61,7 @@ public class ScrambleEvent implements BaseEvent {
     public void stop() {
     }
 
-    private String shuffle(String value) {
+    private String shuffle() {
         List<Character> chars = new ArrayList<>(word.length());
         for (char c : word.toCharArray()) {
             chars.add(c);
