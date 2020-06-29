@@ -3,3 +3,7 @@ events:
   scramble:
     enabled: true
     word-list: 'scramble.txt'
+messages:
+  scramble:
+    announce: '&a[Scramble] A new scramble has started. First one to unscramble the word &c%s &agets a prize!'
+    winner: '&a[Scramble] %s has unscrambled the word %s!'
