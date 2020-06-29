@@ -1,0 +1,5 @@
+event-timer-seconds: 1800
+events:
+  scramble:
+    enabled: true
+    word-list: 'scramble.txt'
