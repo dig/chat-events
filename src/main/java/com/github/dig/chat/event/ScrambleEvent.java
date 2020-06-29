@@ -83,6 +83,8 @@ public class ScrambleEvent implements BaseEvent {
 
             String winner = ChatColor.translateAlternateColorCodes('&', String.format(msgConfig.getString("winner", ""), player.getName(), word));
             Bukkit.broadcastMessage(winner);
+
+            event.setCancelled(true);
         }
     }
 }
