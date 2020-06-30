@@ -18,7 +18,7 @@ public class EventSelectionTask implements Runnable {
             int i = 0;
             BaseEvent next = null;
             while ((next == null || !next.canRun()) && i < EventType.values().length) {
-                next = EventType.of(EventType.random());
+                next = BaseEvent.of(EventType.random());
                 i++;
             }
 

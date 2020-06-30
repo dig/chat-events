@@ -1,5 +1,6 @@
 package com.github.dig.chat;
 
+import com.github.dig.chat.event.BaseEvent;
 import com.github.dig.chat.event.EventType;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandExecutor;
@@ -24,7 +25,7 @@ public class Command implements CommandExecutor {
             if (subCommand.equalsIgnoreCase("force") && sender.hasPermission("chatevents.force")) {
                 try {
                     EventType eventType = EventType.valueOf(args[1].toLowerCase());
-                    chatEvents.setEvent(EventType.of(eventType));
+                    chatEvents.setEvent(BaseEvent.of(eventType));
                     sender.sendMessage(ChatColor.GREEN + "Event forced.");
                 } catch (Exception e) {
                     sender.sendMessage(ChatColor.RED + "That event doesn't exist!");

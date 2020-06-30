@@ -10,4 +10,10 @@ public interface BaseEvent extends Listener {
     void start();
     void stop();
 
+    static BaseEvent of(EventType type) {
+        switch (type) {
+            case SCRAMBLE: return new ScrambleEvent();
+            default: return null;
+        }
+    }
 }
