@@ -43,7 +43,6 @@ public class CreateCoupon implements Supplier<Boolean> {
                     .field("basket_type", coupon.getBasketType().getName())
                     .field("minimum", coupon.getMinimum())
                     .field("discount_application_method", coupon.getDiscountMethod().getType())
-                    .field("username", coupon.getUsername())
                     .field("note", coupon.getNote())
                     .asString();
             if (response.getStatus() != 200) {

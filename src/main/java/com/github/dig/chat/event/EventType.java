@@ -4,6 +4,7 @@ import java.util.Random;
 
 public enum EventType {
 
+    COUPON,
     SCRAMBLE;
 
     private static final Random RANDOM = new Random();

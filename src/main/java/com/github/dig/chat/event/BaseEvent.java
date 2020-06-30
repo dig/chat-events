@@ -12,6 +12,7 @@ public interface BaseEvent extends Listener {
 
     static BaseEvent of(EventType type) {
         switch (type) {
+            case COUPON: return new CouponEvent();
             case SCRAMBLE: return new ScrambleEvent();
             default: return null;
         }

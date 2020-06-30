@@ -1,13 +1,12 @@
-package com.github.dig.chat.reward;
+package com.github.dig.chat.event;
 
 import com.github.dig.chat.ChatEvents;
+import com.github.dig.chat.MessageParser;
 import com.github.dig.chat.tebex.Coupon;
 import com.github.dig.chat.tebex.CreateCoupon;
 import lombok.extern.java.Log;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
 
 import java.util.Date;
 import java.util.concurrent.CompletableFuture;
@@ -15,10 +14,26 @@ import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 
 @Log
-public class TebexCouponReward implements Reward {
+public class CouponEvent implements BaseEvent {
+
+    private static final String COUPON_KEY = "coupon";
+
+    private final ChatEvents chatEvents = ChatEvents.getInstance();
+    private final ConfigurationSection config = chatEvents.getConfig().getConfigurationSection("events." + COUPON_KEY);
+    private final ConfigurationSection msgConfig = chatEvents.getConfig().getConfigurationSection("messages." + COUPON_KEY);
 
     @Override
-    public void run(ConfigurationSection config, Player player) {
+    public boolean canRun() {
+        return config.getBoolean("enabled");
+    }
+
+    @Override
+    public boolean isRunning() {
+        return false;
+    }
+
+    @Override
+    public void start() {
         ConfigurationSection apiConfig = config.getConfigurationSection("api");
 
         String secret = apiConfig.getString("secret");
@@ -39,8 +54,6 @@ public class TebexCouponReward implements Reward {
         Coupon.BasketType basketType = Coupon.BasketType.valueOf(apiConfig.getString("basket_type"));
         double minimum = apiConfig.getDouble("minimum");
         Coupon.DiscountMethod discountMethod = Coupon.DiscountMethod.valueOf(apiConfig.getString("discount_application_method"));
-
-        boolean restrictToUsername = apiConfig.getBoolean("restrict_to_username");
         String note = apiConfig.getString("note");
 
         Coupon coupon = Coupon.builder()
@@ -58,7 +71,6 @@ public class TebexCouponReward implements Reward {
                 .basketType(basketType)
                 .minimum(minimum)
                 .discountMethod(discountMethod)
-                .username(player.getName())
                 .note(note)
                 .build();
 
@@ -66,11 +78,11 @@ public class TebexCouponReward implements Reward {
         Bukkit.getScheduler().runTaskAsynchronously(ChatEvents.getInstance(), () -> {
             try {
                 if (future.get()) {
-                    Bukkit.getScheduler().runTask(ChatEvents.getInstance(), () ->
-                            config.getStringList("on-create.messages").stream()
-                                    .map(s -> String.format(s, code))
-                                    .forEach(s -> player.sendMessage(ChatColor.translateAlternateColorCodes('&', s)))
-                    );
+                    Bukkit.getScheduler().runTask(ChatEvents.getInstance(), () -> {
+                        String announceMsg = msgConfig.getString("announce")
+                                .replaceAll("%code", code);
+                        Bukkit.broadcastMessage(MessageParser.parse(announceMsg));
+                    });
                 }
             } catch (InterruptedException | ExecutionException e) {
                 log.log(Level.SEVERE, "Unable to create coupon", e);
@@ -78,6 +90,9 @@ public class TebexCouponReward implements Reward {
         });
     }
 
+    @Override
+    public void stop() {
+    }
 
     private static final String ALPHA_NUMERIC_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     private static String randomAlphaNumeric(int count) {

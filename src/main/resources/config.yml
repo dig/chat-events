@@ -1,54 +1,52 @@
 event-timer-seconds: 1800
 events:
+  coupon:
+    enabled: true
+    code-length: 8
+    api:
+      # Secret for making API requests
+      secret: ''
+      # What this coupon should be effective on, either "CART", "PACKAGE" or "CATEGORY".
+      effective_on: 'CART'
+      # An array of package IDs this coupon should apply to. Only used if effective_on is "PACKAGE".
+      packages:
+        - 1
+        - 2
+      # An array of category IDs this coupon should apply to. Only used if effective_on is "CATEGORY".
+      categories:
+        - 1
+        - 2
+      # "PERCENTAGE" or "VALUE".
+      discount_type: 'PERCENTAGE'
+      # The currency amount to discount. Only used if value above
+      discount_amount: 50
+      # The percentage amount to be discounted. Only used if percentage above
+      discount_percentage: 50
+      # Can the coupon be redeemed an unlimited amount of times.
+      redeem_unlimited: false
+      # Should the coupon ignore the expire_date.
+      expire_never: true
+      # Only used if redeem_unlimited is true.
+      expire_limit: 1
+      # "SINGLE", "SUBSCRIPTION", or "BOTH".
+      basket_type: 'SINGLE'
+      # Minimum value of basket before the coupon can be redeemed.
+      minimum: 0
+      # "EACH_PACKAGE" or "BASKET_BEFORE_SALES" or "BASKET_AFTER_SALES"
+      discount_application_method: 'EACH_PACKAGE'
+      # The note to store against the coupon.
+      note: 'Scramble event prize'
   scramble:
     enabled: true
     word-list: 'scramble.txt'
     reward:
       commands:
-        - 'msg %s congrats you won'
-      tebex-coupon:
-        enabled: true
-        code-length: 8
-        on-create:
-          messages:
-            - '&a[Scramble] Heres your coupon code: %s, use it at store.example.com.'
-        api:
-          # Secret for making API requests
-          secret: ''
-          # What this coupon should be effective on, either "CART", "PACKAGE" or "CATEGORY".
-          effective_on: 'CART'
-          # An array of package IDs this coupon should apply to. Only used if effective_on is "PACKAGE".
-          packages:
-            - 1
-            - 2
-          # An array of category IDs this coupon should apply to. Only used if effective_on is "CATEGORY".
-          categories:
-            - 1
-            - 2
-          # "PERCENTAGE" or "VALUE".
-          discount_type: 'PERCENTAGE'
-          # The currency amount to discount. Only used if value above
-          discount_amount: 50
-          # The percentage amount to be discounted. Only used if percentage above
-          discount_percentage: 50
-          # Can the coupon be redeemed an unlimited amount of times.
-          redeem_unlimited: false
-          # Should the coupon ignore the expire_date.
-          expire_never: true
-          # Only used if redeem_unlimited is true.
-          expire_limit: 1
-          # "SINGLE", "SUBSCRIPTION", or "BOTH".
-          basket_type: 'SINGLE'
-          # Minimum value of basket before the coupon can be redeemed.
-          minimum: 0
-          # "EACH_PACKAGE" or "BASKET_BEFORE_SALES" or "BASKET_AFTER_SALES"
-          discount_application_method: 'EACH_PACKAGE'
-          # Should the coupon be restricted to the winner of the event?
-          restrict_to_username: true
-          # The note to store against the coupon.
-          note: 'Scramble event prize'
+        - 'give %player diamond 1'
 
 messages:
+  coupon:
+    announce: '&a[Coupon] Limited time coupon code: %code, first one to use it at store.example.com.'
   scramble:
-    announce: '&a[Scramble] A new scramble has started. First one to unscramble the word &c%s &agets a prize!'
-    winner: '&a[Scramble] %s has unscrambled the word %s!'
+    announce: '&a[Scramble] A new scramble has started. First one to unscramble the word &c%word &agets a prize!'
+    winner: '&a[Scramble] %player has unscrambled the word %word!'
+    reward: '&a[Scramble] You received a diamond as a reward!'

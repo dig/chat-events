@@ -4,6 +4,7 @@ import com.github.dig.chat.event.BaseEvent;
 import com.google.common.io.ByteStreams;
 import lombok.Getter;
 import lombok.extern.java.Log;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -24,6 +25,7 @@ public class ChatEvents extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        log.log(Level.INFO, Bukkit.getVersion());
         instance = this;
         this.saveDefaultFiles(defaultFiles);
 

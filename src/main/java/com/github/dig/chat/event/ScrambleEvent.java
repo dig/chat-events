@@ -1,7 +1,9 @@
 package com.github.dig.chat.event;
 
 import com.github.dig.chat.ChatEvents;
+import com.github.dig.chat.MessageParser;
 import com.github.dig.chat.reward.TebexCouponReward;
+import lombok.NonNull;
 import lombok.extern.java.Log;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -51,8 +53,9 @@ public class ScrambleEvent implements BaseEvent {
             word = words.get(RANDOM.nextInt(words.size()));
 
             String shuffledWord = shuffle();
-            String announce = ChatColor.translateAlternateColorCodes('&', String.format(msgConfig.getString("announce", ""), shuffledWord));
-            Bukkit.broadcastMessage(announce);
+            String announceMsg = msgConfig.getString("announce", "")
+                    .replaceAll("%word", shuffledWord);
+            Bukkit.broadcastMessage(MessageParser.parse(announceMsg));
         } catch (IOException e) {
             log.log(Level.SEVERE, "Unable to read word list for Scramble.", e);
         }
@@ -85,17 +88,21 @@ public class ScrambleEvent implements BaseEvent {
         }
     }
 
-    private void win(Player player) {
+    private void win(@NonNull Player player) {
         winnerUUID = Optional.ofNullable(player.getUniqueId());
-        String winner = ChatColor.translateAlternateColorCodes('&', String.format(msgConfig.getString("winner", ""), player.getName(), word));
-        Bukkit.broadcastMessage(winner);
+
+        String winnerMsg = msgConfig.getString("winner")
+                .replaceAll("%player", player.getName())
+                .replaceAll("%word", word);
+        Bukkit.broadcastMessage(MessageParser.parse(winnerMsg));
+
+        String rewardMsg = msgConfig.getString("reward");
+        player.sendMessage(MessageParser.parse(rewardMsg));
 
         if (config.contains("reward.commands")) {
-            config.getStringList("reward.commands").forEach(s -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), String.format(s, player.getName())));
-        }
-
-        if (config.contains("reward.tebex-coupon") && config.getBoolean("reward.tebex-coupon.enabled")) {
-            new TebexCouponReward().run(config.getConfigurationSection("reward.tebex-coupon"), player);
+            config.getStringList("reward.commands").stream()
+                    .map(s -> s.replaceAll("%player", player.getName()))
+                    .forEach(s -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), s));
         }
     }
 }

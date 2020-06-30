@@ -2,12 +2,15 @@ package com.github.dig.chat;
 
 import com.github.dig.chat.event.BaseEvent;
 import com.github.dig.chat.event.EventType;
+import lombok.extern.java.Log;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import java.util.Arrays;
+import java.util.logging.Level;
 
+@Log
 public class Command implements CommandExecutor {
 
     private ChatEvents chatEvents = ChatEvents.getInstance();
@@ -27,7 +30,8 @@ public class Command implements CommandExecutor {
                     EventType eventType = EventType.valueOf(args[1].toUpperCase());
                     chatEvents.setEvent(BaseEvent.of(eventType));
                     sender.sendMessage(ChatColor.GREEN + "Event forced.");
-                } catch (Exception e) {
+                } catch (IllegalArgumentException | NullPointerException e) {
+                    log.log(Level.SEVERE, "Unable to start event", e);
                     sender.sendMessage(ChatColor.RED + "That event doesn't exist!");
                 }
             }
