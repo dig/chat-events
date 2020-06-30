@@ -1,6 +1,7 @@
 package com.github.dig.chat.event;
 
 import com.github.dig.chat.ChatEvents;
+import com.github.dig.chat.reward.TebexCouponReward;
 import lombok.extern.java.Log;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -79,12 +80,22 @@ public class ScrambleEvent implements BaseEvent {
     public void onChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
         if (event.getMessage().equals(word) && !winnerUUID.isPresent()) {
-            winnerUUID = Optional.ofNullable(player.getUniqueId());
-
-            String winner = ChatColor.translateAlternateColorCodes('&', String.format(msgConfig.getString("winner", ""), player.getName(), word));
-            Bukkit.broadcastMessage(winner);
-
+            Bukkit.getScheduler().runTask(chatEvents, () -> win(player));
             event.setCancelled(true);
+        }
+    }
+
+    private void win(Player player) {
+        winnerUUID = Optional.ofNullable(player.getUniqueId());
+        String winner = ChatColor.translateAlternateColorCodes('&', String.format(msgConfig.getString("winner", ""), player.getName(), word));
+        Bukkit.broadcastMessage(winner);
+
+        if (config.contains("reward.commands")) {
+            config.getStringList("reward.commands").forEach(s -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), String.format(s, player.getName())));
+        }
+
+        if (config.contains("reward.tebex-coupon") && config.getBoolean("reward.tebex-coupon.enabled")) {
+            new TebexCouponReward().run(config.getConfigurationSection("reward.tebex-coupon"), player);
         }
     }
 }
