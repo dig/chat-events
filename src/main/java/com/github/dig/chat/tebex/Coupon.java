@@ -34,7 +34,8 @@ public class Coupon {
 
     public enum ItemType {
         PACKAGE("package"),
-        CATEGORY("category");
+        CATEGORY("category"),
+        CART("cart");
 
         @Getter
         private String name;

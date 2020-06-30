@@ -37,6 +37,6 @@ public class Command implements CommandExecutor {
                     ChatColor.RED + "/chatevents force <type> - Starts event"
             ).forEach(s -> sender.sendMessage(s));
         }
-        return false;
+        return true;
     }
 }

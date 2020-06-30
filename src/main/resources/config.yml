@@ -15,8 +15,8 @@ events:
         api:
           # Secret for making API requests
           secret: ''
-          # What this coupon should be effective on, either "PACKAGE" or "CATEGORY".
-          effective_on: 'PACKAGE'
+          # What this coupon should be effective on, either "CART", "PACKAGE" or "CATEGORY".
+          effective_on: 'CART'
           # An array of package IDs this coupon should apply to. Only used if effective_on is "PACKAGE".
           packages:
             - 1
