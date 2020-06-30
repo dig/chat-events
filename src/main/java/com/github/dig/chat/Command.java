@@ -24,7 +24,7 @@ public class Command implements CommandExecutor {
             String subCommand = args[0];
             if (subCommand.equalsIgnoreCase("force") && sender.hasPermission("chatevents.force")) {
                 try {
-                    EventType eventType = EventType.valueOf(args[1].toLowerCase());
+                    EventType eventType = EventType.valueOf(args[1].toUpperCase());
                     chatEvents.setEvent(BaseEvent.of(eventType));
                     sender.sendMessage(ChatColor.GREEN + "Event forced.");
                 } catch (Exception e) {
