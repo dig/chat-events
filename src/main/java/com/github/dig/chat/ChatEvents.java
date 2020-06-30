@@ -25,7 +25,6 @@ public class ChatEvents extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        log.log(Level.INFO, Bukkit.getVersion());
         instance = this;
         this.saveDefaultFiles(defaultFiles);
 
