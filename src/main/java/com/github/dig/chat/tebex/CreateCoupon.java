@@ -46,6 +46,9 @@ public class CreateCoupon implements Supplier<Boolean> {
                     .field("username", coupon.getUsername())
                     .field("note", coupon.getNote())
                     .asString();
+            if (response.getStatus() != 200) {
+                log.log(Level.SEVERE, String.format("Unable to create coupon: %s", response.getBody()));
+            }
             return response.getStatus() == 200;
         } catch (UnirestException e) {
             log.log(Level.SEVERE, "Unable to create coupon", e);
