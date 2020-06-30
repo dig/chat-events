@@ -2,11 +2,9 @@ package com.github.dig.chat.event;
 
 import com.github.dig.chat.ChatEvents;
 import com.github.dig.chat.MessageParser;
-import com.github.dig.chat.reward.TebexCouponReward;
 import lombok.NonNull;
 import lombok.extern.java.Log;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
