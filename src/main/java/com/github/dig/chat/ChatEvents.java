@@ -33,6 +33,8 @@ public class ChatEvents extends JavaPlugin {
         BukkitScheduler scheduler = getServer().getScheduler();
         scheduler.runTaskTimer(this, new EventSelectionTask(), tickTime, tickTime);
         scheduler.runTaskTimer(this, new EventTick(), 1L, 1L);
+
+        getCommand("chatevents").setExecutor(new Command());
     }
 
     public void setEvent(BaseEvent event) {
