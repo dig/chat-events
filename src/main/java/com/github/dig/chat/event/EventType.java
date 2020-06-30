@@ -6,7 +6,7 @@ public enum EventType {
 
     SCRAMBLE;
 
-    public static BaseEvent create(EventType type) {
+    public static BaseEvent of(EventType type) {
         switch (type) {
             case SCRAMBLE: return new ScrambleEvent();
             default: return null;

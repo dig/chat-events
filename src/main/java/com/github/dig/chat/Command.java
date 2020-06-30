@@ -24,7 +24,7 @@ public class Command implements CommandExecutor {
             if (subCommand.equalsIgnoreCase("force") && sender.hasPermission("chatevents.force")) {
                 try {
                     EventType eventType = EventType.valueOf(args[1].toLowerCase());
-                    chatEvents.setEvent(EventType.create(eventType));
+                    chatEvents.setEvent(EventType.of(eventType));
                     sender.sendMessage(ChatColor.GREEN + "Event forced.");
                 } catch (Exception e) {
                     sender.sendMessage(ChatColor.RED + "That event doesn't exist!");
