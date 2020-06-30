@@ -32,7 +32,7 @@ events:
           # The percentage amount to be discounted. Only used if percentage above
           discount_percentage: 50
           # Can the coupon be redeemed an unlimited amount of times.
-          redeem_unlimited: true
+          redeem_unlimited: false
           # Should the coupon ignore the expire_date.
           expire_never: true
           # Only used if redeem_unlimited is true.

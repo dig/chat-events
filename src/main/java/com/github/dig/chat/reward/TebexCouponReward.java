@@ -3,23 +3,26 @@ package com.github.dig.chat.reward;
 import com.github.dig.chat.ChatEvents;
 import com.github.dig.chat.tebex.Coupon;
 import com.github.dig.chat.tebex.CreateCoupon;
+import lombok.extern.java.Log;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import java.util.Date;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
 
+@Log
 public class TebexCouponReward implements Reward {
 
     @Override
     public void run(ConfigurationSection config, Player player) {
         ConfigurationSection apiConfig = config.getConfigurationSection("api");
 
+        String secret = apiConfig.getString("secret");
         String code = randomAlphaNumeric(config.getInt("code-length", 8));
-        config.getStringList("on-create.messages").stream()
-                .map(s -> String.format(s, code))
-                .forEach(s -> player.sendMessage(ChatColor.translateAlternateColorCodes('&', s)));
 
         Coupon.ItemType itemType = Coupon.ItemType.valueOf(apiConfig.getString("effective_on"));
         int[] packages = apiConfig.getIntegerList("packages").stream().mapToInt(i->i).toArray();
@@ -59,7 +62,20 @@ public class TebexCouponReward implements Reward {
                 .note(note)
                 .build();
 
-        Bukkit.getScheduler().runTaskAsynchronously(ChatEvents.getInstance(), new CreateCoupon(coupon));
+        CompletableFuture<Boolean> future = CompletableFuture.supplyAsync(new CreateCoupon(secret, coupon));
+        Bukkit.getScheduler().runTaskAsynchronously(ChatEvents.getInstance(), () -> {
+            try {
+                if (future.get()) {
+                    Bukkit.getScheduler().runTask(ChatEvents.getInstance(), () ->
+                            config.getStringList("on-create.messages").stream()
+                                    .map(s -> String.format(s, code))
+                                    .forEach(s -> player.sendMessage(ChatColor.translateAlternateColorCodes('&', s)))
+                    );
+                }
+            } catch (InterruptedException | ExecutionException e) {
+                log.log(Level.SEVERE, "Unable to create coupon", e);
+            }
+        });
     }
 
 

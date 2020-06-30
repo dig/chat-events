@@ -7,24 +7,28 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import lombok.extern.java.Log;
 
 import java.text.SimpleDateFormat;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 
 @Log
-public class CreateCoupon implements Runnable {
+public class CreateCoupon implements Supplier<Boolean> {
 
     private final static String API_COUPON_CREATE = "https://plugin.tebex.io/coupons";
 
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private final String apiSecret;
     private final Coupon coupon;
 
-    public CreateCoupon(Coupon coupon) {
+    public CreateCoupon(String apiSecret, Coupon coupon) {
+        this.apiSecret = apiSecret;
         this.coupon = coupon;
     }
 
     @Override
-    public void run() {
+    public Boolean get() {
         try {
             HttpResponse<String> response = Unirest.post(API_COUPON_CREATE)
+                    .header("X-Tebex-Secret", apiSecret)
                     .field("code", coupon.getCode())
                     .field("effective_on", coupon.getEffectiveOn().getName())
                     .field("packages", coupon.getPackages())
@@ -42,12 +46,11 @@ public class CreateCoupon implements Runnable {
                     .field("username", coupon.getUsername())
                     .field("note", coupon.getNote())
                     .asString();
-
-            log.log(Level.INFO, response.getStatus() + "");
-            log.log(Level.INFO, response.getStatusText());
-            log.log(Level.INFO, response.getBody());
+            return response.getStatus() == 200;
         } catch (UnirestException e) {
             log.log(Level.SEVERE, "Unable to create coupon", e);
         }
+
+        return false;
     }
 }
