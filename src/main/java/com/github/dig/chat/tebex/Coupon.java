@@ -83,6 +83,7 @@ public class Coupon {
             for (DiscountMethod x : values()) {
                 if (x.getType() == value) {
                     method = x;
+                    break;
                 }
             }
             return method;
