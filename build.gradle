@@ -16,6 +16,6 @@ repositories {
 dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.8'
     compileOnly 'org.projectlombok:lombok:1.18.8'
-    compileOnly 'org.spigotmc:spigot-api:1.16.1-R0.1-SNAPSHOT'
+    compileOnly 'org.spigotmc:spigot-api:1.15.1-R0.1-SNAPSHOT'
     compile 'com.mashape.unirest:unirest-java:1.4.9'
 }
